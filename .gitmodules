@@ -1,3 +1,3 @@
 [submodule "AqueCore/vendor/spdlog"]
 	path = AqueCore/vendor/spdlog
-	url = git@github.com:gabime/spdlog.git
+	url = https://github.com/gabime/spdlog.git
