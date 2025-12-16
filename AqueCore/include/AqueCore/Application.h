@@ -10,7 +10,7 @@
 			Application();
 			virtual ~Application();
 
-			void Run();
+			virtual void Run();
 
 			inline static Application& Get() { return *s_Instance; }
 

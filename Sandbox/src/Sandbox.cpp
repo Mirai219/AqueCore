@@ -5,7 +5,7 @@ class Sandbox : public AQC::Application
 public:
 	Sandbox()
 	{
-
+		AQC_INFO("Create Sandbox Successfully!");
 	}
 	
 	~Sandbox()

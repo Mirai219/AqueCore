@@ -1,5 +1,7 @@
 #include "AqueCore/Application.h"
 #include "stdio.h"
+#include "AqueCore/Events/ApplicationEvent.h"
+#include "AqueCore/Log.h"
 
 namespace AQC
 {
