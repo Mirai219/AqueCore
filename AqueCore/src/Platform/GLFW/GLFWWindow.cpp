@@ -1,13 +1,14 @@
-#include "Platform/Windows/WindowsWindow.h"
+#include "Platform/GLFW/GLFWWindow.h"
 #include "AqueCore/Log.h"
 #include "AqueCore/Events/Event.h"
 #include "AqueCore/Events/ApplicationEvent.h"
 #include "AqueCore/Events/KeyEvent.h"
 #include "AqueCore/Events/MouseEvent.h"
-#include "Platform/Windows/GLFWKeyMap.h"
-#include "Platform/Windows/GLFWMouseMap.h"
+#include "Platform/GLFW/GLFWKeyMap.h"
+#include "Platform/GLFW/GLFWMouseMap.h"
 
 #include <GLFW/glfw3.h>
+#include <glad/glad.h>
 
 namespace AQC
 {
@@ -20,37 +21,40 @@ namespace AQC
 
 	Window* Window::Create(const WindowProps& props)
 	{
-		return new WindowsWindow(props);
+		return new GLFWWindow(props);
 	}
 
-	WindowsWindow::WindowsWindow(const WindowProps& props)
+	GLFWWindow::GLFWWindow(const WindowProps& props)
 	{
 		Init(props);
 	}
 
-	WindowsWindow::~WindowsWindow()
+	GLFWWindow::~GLFWWindow()
 	{
 		ShutDown();
 	}
 
-	void WindowsWindow::OnUpdate()
+	void GLFWWindow::OnUpdate()
 	{
-		/* Render here */
-		glClear(GL_COLOR_BUFFER_BIT);
 
-		/* Swap front and back buffers */
-		glfwSwapBuffers(m_Window);
+	}
 
-		/* Poll for and process events */
+	void GLFWWindow::PollEvents()
+	{
 		glfwPollEvents();
 	}
 
-	bool WindowsWindow::IsVSync() const
+	void GLFWWindow::SwapBuffers()
+	{
+		glfwSwapBuffers(m_Window);
+	}
+
+	bool GLFWWindow::IsVSync() const
 	{
 		return m_Data.VSync;
 	}
 
-	void WindowsWindow::SetVSync(bool enabled)
+	void GLFWWindow::SetVSync(bool enabled)
 	{
 		if (enabled)
 			glfwSwapInterval(1);
@@ -60,17 +64,17 @@ namespace AQC
 		m_Data.VSync = enabled;
 	}
 
-	void WindowsWindow::SetEventCallback(const EventCallbackFn callback)
+	void GLFWWindow::SetEventCallback(const EventCallbackFn callback)
 	{
 		m_Data.EventCallback = callback;
 	}
 
-	void* WindowsWindow::GetNativeWindow() const
+	void* GLFWWindow::GetNativeWindow() const
 	{
 		return m_Window;
 	}
 
-	void WindowsWindow::Init(const WindowProps& props)
+	void GLFWWindow::Init(const WindowProps& props)
 	{
 		m_Data.Height = props.Height;
 		m_Data.Width = props.Width;
@@ -88,7 +92,7 @@ namespace AQC
 
 		m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
 		glfwMakeContextCurrent(m_Window);
-		//int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 
 		glfwSetWindowUserPointer(m_Window, &m_Data);
 		SetVSync(true);
@@ -195,7 +199,7 @@ namespace AQC
 			});
 	}
 
-	void WindowsWindow::ShutDown()
+	void GLFWWindow::ShutDown()
 	{
 		glfwDestroyWindow(m_Window);
 	}

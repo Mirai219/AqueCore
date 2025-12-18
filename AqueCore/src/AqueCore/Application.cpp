@@ -2,6 +2,7 @@
 #include "AqueCore/Events/Event.h"
 #include "AqueCore/Events/ApplicationEvent.h"
 #include "AqueCore/Log.h"
+#include "AqueCore/Renderer/Renderer.h"
 
 namespace AQC
 {
@@ -13,6 +14,10 @@ namespace AQC
 		s_Instance = this;
 		m_Window = Window::Create();
 		m_Window->SetEventCallback(BIND_EVENT_FN(Application::OnEvent));
+		m_ImGuiLayer = new ImGuiLayer();
+		PushOverlay(m_ImGuiLayer);
+
+		Renderer::Init();
 	}
 
 	Application::~Application()
@@ -24,11 +29,20 @@ namespace AQC
 	{
 		while (m_Running)
 		{
+			m_Window->PollEvents();
+
+			Renderer::SetClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+			Renderer::Clear();
+
 			for (Layer* layer : m_LayerStack)
-			{
 				layer->OnUpdate();
-			}
-			m_Window->OnUpdate();
+
+			m_ImGuiLayer->Begin();
+			for (Layer* layer : m_LayerStack)
+				layer->OnImGuiRender();
+			m_ImGuiLayer->End();
+
+			m_Window->SwapBuffers();
 		}
 	}
 
@@ -52,6 +66,11 @@ namespace AQC
 	{
 		m_Running = false;
 		return true;
+	}
+
+	Window& Application::GetWindow() const
+	{
+		return *m_Window;
 	}
 
 	void Application::PushLayer(Layer* layer)

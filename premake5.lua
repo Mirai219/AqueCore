@@ -10,7 +10,7 @@ workspace "AqueEngine"
     IncludeDirs["spdlog"] = "AqueCore/vendor/spdlog/include"
     IncludeDirs["glfw"] = "AqueCore/vendor/glfw/include"
     IncludeDirs["glad"] = "AqueCore/vendor/glad/include"
-    IncludeDirs["imgui"] = "AuqeCore/vendor/imgui"
+    IncludeDirs["imgui"] = "AqueCore/vendor/imgui"
 
 project "AqueCore"
     kind "SharedLib"
@@ -33,6 +33,8 @@ project "AqueCore"
         "%{prj.name}/include",
         IncludeDirs["spdlog"],
         IncludeDirs["glfw"],
+        IncludeDirs["glad"],
+        IncludeDirs["imgui"],
     }
 
     defines 
@@ -40,12 +42,16 @@ project "AqueCore"
         "AQC_PLATFORM_WINDOWS",
         "AQC_BUILD_DLL",
         "SPDLOG_HEADER_ONLY",
+        "GLFW_INCLUDE_NONE",
+        "IMGUI_IMPL_OPENGL_LOADER_CUSTOM"
     }
 
     links
     {
         "glfw",
-        "opengl32.lib"
+        "opengl32.lib",
+        "glad",
+        "imgui"
     }
 
     filter "system:windows"
@@ -209,13 +215,8 @@ project "imgui"
     files
 	{
 		"AqueCore/vendor/imgui/*.cpp",
-        "AqueCore/vendor/imgui/*.h"
+        "AqueCore/vendor/imgui/*.h",
 	}
-
-    includedirs
-    {
-        IncludeDirs["imgui"]
-    }
 
     filter "system:windows"
 		buildoptions { "/utf-8" }

@@ -7,13 +7,16 @@ class GLFWwindow;
 
 namespace AQC
 {
-	class AQC_API WindowsWindow : public Window
+	class AQC_API GLFWWindow : public Window
 	{
 	public:
-		WindowsWindow(const WindowProps& props);
-		virtual ~WindowsWindow();
+		GLFWWindow(const WindowProps& props);
+		virtual ~GLFWWindow();
 
 		virtual void OnUpdate() override;
+
+		void PollEvents() override;
+		void SwapBuffers() override;
 
 		bool IsVSync() const override;
 		void SetVSync(bool enabled) override;

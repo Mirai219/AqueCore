@@ -3,6 +3,7 @@
 #include "AqueCore/Core.h"
 #include "AqueCore/Window.h"
 #include "AqueCore/LayerStack.h"
+#include "AqueCore/ImGuiLayer.h"
 
 namespace AQC
 {
@@ -22,6 +23,8 @@ namespace AQC
 
 		inline static Application& Get() { return *s_Instance; }
 
+		Window& GetWindow() const;
+
 		void PushLayer(Layer* layer);
 		void PushOverlay(Layer* layer);
 
@@ -30,6 +33,7 @@ namespace AQC
 		Window* m_Window;
 		static Application* s_Instance;
 		LayerStack m_LayerStack;
+		ImGuiLayer* m_ImGuiLayer;
 	};
 
 	// To be defined in CLIENT
