@@ -28,3 +28,23 @@ namespace AQC
 #define AQC_WARN(...)		::AQC::Log::GetClientLogger()->warn(__VA_ARGS__)
 #define AQC_INFO(...)		::AQC::Log::GetClientLogger()->info(__VA_ARGS__)
 #define AQC_TRACE(...)		::AQC::Log::GetClientLogger()->trace(__VA_ARGS__)
+
+#ifdef AQC_ENABLE_ASSERTS
+#define AQC_CORE_ASSERT(x, ...) \
+			{ \
+				if(!(x)) { \
+					::AQC::Log::GetCoreLogger()->error("Assertion Failed: {0}", __VA_ARGS__); \
+					__debugbreak(); \
+				} \
+			}
+#define	AQC_ASSERT(x, ...) \
+			{ \
+				if(!(x)) { \
+					::AQC::Log::GetClientLogger()->error("Assertion Failed: {0}", __VA_ARGS__); \
+					__debugbreak(); \
+				} \
+			}
+#else
+#define AQC_CORE_ASSERT(x, ...) {}
+#define	AQC_ASSERT(x, ...) {}
+#endif

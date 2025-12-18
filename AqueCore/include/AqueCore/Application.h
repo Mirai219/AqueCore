@@ -1,25 +1,37 @@
-	#pragma once
+#pragma once
 
-	#include "AqueCore/Core.h"
+#include "AqueCore/Core.h"
+#include "AqueCore/Window.h"
+#include "AqueCore/LayerStack.h"
 
-	namespace AQC
+namespace AQC
+{
+	class Event;
+	class WindowCloseEvent;
+
+	class AQC_API Application
 	{
-		class AQC_API Application
-		{
-		public:
-			Application();
-			virtual ~Application();
+	public:
+		Application();
+		virtual ~Application();
 
-			virtual void Run();
+		void Run();
 
-			inline static Application& Get() { return *s_Instance; }
+		void OnEvent(Event& e);
+		bool OnWindowClose(WindowCloseEvent& e);
 
-		private:
-			bool m_Running = true;
+		inline static Application& Get() { return *s_Instance; }
 
-			static Application* s_Instance;
-		};
+		void PushLayer(Layer* layer);
+		void PushOverlay(Layer* layer);
 
-		// To be defined in CLIENT
-		Application* CreateApplication();
-	}
+	private:
+		bool m_Running = true;
+		Window* m_Window;
+		static Application* s_Instance;
+		LayerStack m_LayerStack;
+	};
+
+	// To be defined in CLIENT
+	Application* CreateApplication();
+}
